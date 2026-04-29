@@ -10,23 +10,32 @@ import { StyleSheet,
 import { Link, router } from 'expo-router'
 import { useSQLiteContext, SQLiteProvider } from 'expo-sqlite'
 
+const IMAGES = {
+  'tungtung':     require('../../images/tungtung.webp'),
+  'bombardiro':   require('../../images/bombardiro_crocodilo.png'),
+  'six-seven':    require('../../images/six-seven.png'),
+  'vaca':         require('../../images/vaca.png'),
+  'tralalero':    require('../../images/Tralalero_Tralala.png'),
+  'ballerina':    require('../../images/Ballerina.png'),
+  'bananini':     require('../../images/bananini.png'),
+}
 
 async function initDB (db) {
   const result = await db.getFirstAsync('PRAGMA user_version')
   const currentVersion = result?.user_version || 0
-  if (currentVersion < 1) {
+  if (currentVersion < 2) {
     await db.execAsync(`
     DROP TABLE IF EXISTS produit;
     CREATE TABLE IF NOT EXISTS produit (num INTEGER PRIMARY KEY AUTOINCREMENT,
     titre TEXT, image TEXT, prix REAL);
-    INSERT INTO produit (titre, image, prix) VALUES ('Triple T', '../../images/tungtung.webp',333);
-    INSERT INTO produit (titre, image, prix) VALUES ('Bombardiro Crocodilo', '../../images/bombardiro_crocodilo.png',8.47);
-    INSERT INTO produit (titre, image, prix) VALUES ('six-seven', '../../images/six-seven.png',67.67);
-    INSERT INTO produit (titre, image, prix) VALUES ('Vacca Saturno Saturnita', '../../images/vaca.png',17.38);
-    INSERT INTO produit (titre, image, prix) VALUES ('Tralalero Tralala', '../../images/Tralalero_Tralala.png',1325.99);
-    INSERT INTO produit (titre, image, prix) VALUES ('Ballerina Cappuccina', '../../images/Ballerina.png',6.98);
-    INSERT INTO produit (titre, image, prix) VALUES ('Chimpanzini Bananini', '../../images/bananini.png',0.57);
-    PRAGMA user_version = 1;
+    INSERT INTO produit (titre, image, prix) VALUES ('Triple T', 'tungtung',333);
+    INSERT INTO produit (titre, image, prix) VALUES ('Bombardiro Crocodilo', 'bombardiro',8.47);
+    INSERT INTO produit (titre, image, prix) VALUES ('six-seven', 'six-seven',67.67);
+    INSERT INTO produit (titre, image, prix) VALUES ('Vacca Saturno Saturnita', 'vaca',17.38);
+    INSERT INTO produit (titre, image, prix) VALUES ('Tralalero Tralala', 'tralalero',1325.99);
+    INSERT INTO produit (titre, image, prix) VALUES ('Ballerina Cappuccina', 'ballerina',6.98);
+    INSERT INTO produit (titre, image, prix) VALUES ('Chimpanzini Bananini', 'bananini',0.57);
+    PRAGMA user_version = 2;
     `)
   }
 }
@@ -37,7 +46,7 @@ async function initDB (db) {
 const Maison = ({ maison }) => {
   return (
     <View style={styles.maisonConteneur}>
-      <Image source={maison.image} style={styles.imageMaison} />
+      <Image source={IMAGES[maison.image]} style={styles.imageMaison} />
       <Text style={styles.titreMaison}>{maison.titre}     :     {maison.prix}$</Text>
     </View>
   )
