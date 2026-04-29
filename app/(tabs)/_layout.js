@@ -1,32 +1,40 @@
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { Tabs } from 'expo-router'
 import Feather from '@expo/vector-icons/Feather';
-import Fontisto from '@expo/vector-icons/Fontisto';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 const TabsLayout = () => {
   return (
-    <Tabs>
+    <Tabs screenOptions={{ headerShown:false, tabBarActiveTintColor: "blue", tabBarInactiveTintColor: "lightblue"}}>
       <Tabs.Screen
         name='index'
         options={{
           headerTitle: 'Accueil ',
-          title: 'Tab Accueil',
-          tabBarIcon: () => <Ionicons name='home' size={24}/>
+          title: 'Accueil',
+          tabBarIcon: ({color}) => <Ionicons name='home-outline' size={24} color={color}/>
         }}
       />
       <Tabs.Screen
         name='tab_1/index'
         options={{
-          headerTitle: 'Croisières',
-          title: 'Croisières',
-          tabBarIcon: () => <Fontisto name="sait-boat" size={24}/>
+          headerTitle: 'Produits',
+          title: 'Produits',
+          tabBarIcon: ({color}) => <MaterialCommunityIcons name="reproduction" size={24} color={color} />
         }}
       />
       <Tabs.Screen
         name='tab_2/index'
         options={{
-          headerTitle: 'Recherche',
-          title: 'Recherche',
-          tabBarIcon: () => <Feather name="search" size={24} />
+          headerTitle: 'Panier',
+          title: 'Panier',
+          tabBarIcon: ({color}) => <Feather name="shopping-cart" size={24} color={color} />
+        }}
+      />
+      <Tabs.Screen
+        name='tab_3/index'
+        options={{
+          headerTitle: 'Compte',
+          title: 'Compte',
+          tabBarIcon: ({color}) => <Feather name="user" size={24} color={color} />
         }}
       />
     </Tabs>
