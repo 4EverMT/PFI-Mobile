@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { StyleSheet,
   Text,
   View,
@@ -8,35 +8,36 @@ import { StyleSheet,
   TouchableOpacity,
   Pressable } from 'react-native'
 import { Link, router } from 'expo-router'
-
-const produit1 = require('../../images/tungtung.webp')
-const produit2 = require('../../images/bombardiro_crocodilo.png')
-const produit3 = require('../../images/six-seven.png')
-const produit4 = require('../../images/vaca.png')
-const produit5 = require('../../images/Tralalero_Tralala.png')
-const produit6 = require('../../images/Ballerina.png')
-const produit7 = require('../../images/bananini.png')
+import { useSQLiteContext, SQLiteProvider } from 'expo-sqlite'
 
 
-const data1 = [
-  { num: 1, titre: 'Triple T', image: produit1, prix:333 },
-  { num: 2, titre: 'Bombardiro Crocodilo', image: produit2, prix:8.47 },
-  {
-    num: 3,
-    titre: 'six-seven',
-    image: produit3,
-    prix:67.67
-  },
-  { num: 4, titre: 'Vacca Saturno Saturnita', image: produit4, prix:17.38 },
-  { num: 5, titre: 'Tralalero Tralala', image: produit5, prix:1325.99 },
-  { num: 6, titre: 'Ballerina Cappuccina', image: produit6,prix:6.98 },
-  { num: 7, titre: 'Chimpanzini Bananini', image: produit7, prix:0.57 }
-]
+async function initDB (db) {
+  const result = await db.getFirstAsync('PRAGMA user_version')
+  const currentVersion = result?.user_version || 0
+  if (currentVersion < 1) {
+    await db.execAsync(`
+    DROP TABLE IF EXISTS produit;
+    CREATE TABLE IF NOT EXISTS produit (num INTEGER PRIMARY KEY AUTOINCREMENT,
+    titre TEXT, image TEXT, prix REAL);
+    INSERT INTO produit (titre, image, prix) VALUES ('Triple T', '../../images/tungtung.webp',333);
+    INSERT INTO produit (titre, image, prix) VALUES ('Bombardiro Crocodilo', '../../images/bombardiro_crocodilo.png',8.47);
+    INSERT INTO produit (titre, image, prix) VALUES ('six-seven', '../../images/six-seven.png',67.67);
+    INSERT INTO produit (titre, image, prix) VALUES ('Vacca Saturno Saturnita', '../../images/vaca.png',17.38);
+    INSERT INTO produit (titre, image, prix) VALUES ('Tralalero Tralala', '../../images/Tralalero_Tralala.png',1325.99);
+    INSERT INTO produit (titre, image, prix) VALUES ('Ballerina Cappuccina', '../../images/Ballerina.png',6.98);
+    INSERT INTO produit (titre, image, prix) VALUES ('Chimpanzini Bananini', '../../images/bananini.png',0.57);
+    PRAGMA user_version = 1;
+    `)
+  }
+}
+  
+
+
 
 const Maison = ({ maison }) => {
   return (
     <View style={styles.maisonConteneur}>
-      <Image source={maison.image} style={styles.imageMaison} />{' '}
+      <Image source={maison.image} style={styles.imageMaison} />
       <Text style={styles.titreMaison}>{maison.titre}     :     {maison.prix}$</Text>
     </View>
   )
@@ -54,20 +55,34 @@ const AfficherFlatList = ({ produit }) => {
 }
 
 const HomePage = () => {
-  const [vue, setVue] = useState('flat')
-  const [data, setData] = useState(data1)
-  const [quelleData, setQuelleData] = useState(data1)
+  return (
+    <SQLiteProvider databaseName="produits.db" onInit={initDB}>
+      <Content />
+    </SQLiteProvider>
+  )
+}
+
+function Content() {
+  const db = useSQLiteContext();
+  const [produits, setProduits] = useState([]);
+
+  useEffect(() => {
+    chargerProduits();
+  }, []);
+
+  async function chargerProduits() {
+    const rows = await db.getAllAsync('SELECT * FROM produit');
+    setProduits(rows);
+  }
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.titre, { color: data === data1 ? "white" :'red' }]}>
-        Shop-A Brainrot 
-      </Text>
-
-      <AfficherFlatList produit={data1}/>
-      
+    <View style={styles.titreConteneur}>
+      <Text style={styles.titreTexte}>Produits</Text>
     </View>
-  )
+    <AfficherFlatList produit={produits} />
+  </View>
+  );
 }
 
 
@@ -89,17 +104,19 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     height: 160
   },
-  titre: {
-    backgroundColor: '#00008b',
-    paddingTop: 20,
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: '#F3F3F3',
-    fontSize: 22,
-    fontWeight: '900',
-    textTransform: 'uppercase'
-  },
+  titreConteneur: {
+  backgroundColor: '#00008b',
+  paddingTop: 20,
+  height: 50,
+  alignItems: 'center',
+  justifyContent: 'center',
+},
+titreTexte: {
+  color: '#F3F3F3',
+  fontSize: 22,
+  fontWeight: '900',
+  textTransform: 'uppercase'
+},
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
