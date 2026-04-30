@@ -1,17 +1,11 @@
-import { StyleSheet, Text, View } from "react-native";
+import {ImageBackground, StyleSheet, Text, View } from "react-native";
 import{Link } from 'expo-router'
-export default function Page() {
+
+const image = require('../images/background_pfi.jpg');
+
+ function Page() {
   return (
-<<<<<<< Updated upstream
-    <View>
-      <View>
-        <Text>MAIN PAGE</Text>
-        <Link href="/(tabs)"> CONNECTER </Link>
-      </View>
-    </View>
-  );
-}
-=======
+    
     <View style={styles.container}>
       <ImageBackground source={image} resizeMode="cover" style={styles.image}>
         <Text style={styles.title}>MAIN PAGE</Text>
@@ -30,6 +24,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
   },
+
   title: {
     color: "black",
     fontSize: 42,
@@ -45,4 +40,6 @@ const styles = StyleSheet.create({
 });
 
 export default Page
->>>>>>> Stashed changes
+
+
+
