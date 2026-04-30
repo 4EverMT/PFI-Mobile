@@ -5,14 +5,14 @@ const image = require('../images/background_pfi.jpg');
 
  function Page() {
   return (
-    <View>
+    
     <View style={styles.container}>
       <ImageBackground source={image} resizeMode="cover" style={styles.image}>
         <Text>MAIN PAGE</Text>
         <Link href="/(tabs)"> CONNECTER </Link>
         </ImageBackground>
     </View>
-    </View>
+    
   );
 }
 
