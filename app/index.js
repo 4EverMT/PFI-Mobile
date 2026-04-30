@@ -8,11 +8,10 @@ const image = require('../images/background_pfi.jpg');
     
     <View style={styles.container}>
       <ImageBackground source={image} resizeMode="cover" style={styles.image}>
-        <Text>MAIN PAGE</Text>
-        <Link href="/(tabs)"> CONNECTER </Link>
+        <Text style={styles.title}>MAIN PAGE</Text>
+        <Link href="/(tabs)" style={styles.text}> CONNECTER </Link>
         </ImageBackground>
     </View>
-    
   );
 }
 
@@ -25,11 +24,22 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
   },
-  text: {
-    color: "white",
+
+  title: {
+    color: "black",
     fontSize: 42,
     textAlign: "center",
-  }
+    backgroundColor: "white"
+  },
+    text: {
+    color: "black",
+    fontSize: 24,
+    textAlign: "center",
+    backgroundColor: "white"
+  },
 });
 
 export default Page
+
+
+
