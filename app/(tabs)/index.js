@@ -46,8 +46,10 @@ async function initDB (db) {
 const Maison = ({ maison }) => {
   return (
     <View style={styles.maisonConteneur}>
+      <Pressable style={styles.pressableItem} onPress={() => console.log('cliqué!')}>
       <Image source={IMAGES[maison.image]} style={styles.imageMaison} />
       <Text style={styles.titreMaison}>{maison.titre}     :     {maison.prix}$</Text>
+      </Pressable>
     </View>
   )
 }
@@ -161,6 +163,7 @@ titreTexte: {
     margin: 5
   },
   titreMaison: {
+    color: "#000000", 
     fontSize: 18,
     marginLeft: 10,
     marginRight: 10,
@@ -170,7 +173,12 @@ titreTexte: {
     width: 150,
     height: 150,
     paddingRight: 10
-  }
+  },
+  pressableItem: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  flex: 1
+}
 })
 
 
