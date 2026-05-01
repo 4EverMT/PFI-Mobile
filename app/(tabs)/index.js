@@ -46,9 +46,20 @@ async function initDB (db) {
 const Maison = ({ maison }) => {
   return (
     <View style={styles.maisonConteneur}>
-      <Pressable style={styles.pressableItem} onPress={() => console.log('cliqué!')}>
-      <Image source={IMAGES[maison.image]} style={styles.imageMaison} />
-      <Text style={styles.titreMaison}>{maison.titre}     :     {maison.prix}$</Text>
+      <Pressable
+        style={styles.pressableItem}
+        onPress={() => router.push({
+          pathname: '/details/[id]',
+          params: {
+            id: maison.num,
+            titre: maison.titre,
+            prix: maison.prix,
+            image: maison.image,
+          }
+        })}
+      >
+        <Image source={IMAGES[maison.image]} style={styles.imageMaison} />
+        <Text style={styles.titreMaison}>{maison.titre}  :  {maison.prix}$</Text>
       </Pressable>
     </View>
   )
