@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet } from 'react-native'
+import { View, Text, Image, StyleSheet, Pressable } from 'react-native'
 import { useLocalSearchParams } from 'expo-router'
 
 const IMAGES = {
@@ -19,6 +19,7 @@ export default function Details() {
       <Image source={IMAGES[image]} style={styles.image} />
       <Text style={styles.titre}>{titre}</Text>
       <Text style={styles.prix}>{prix} $</Text>
+      <Pressable style={styles.pressableAjouter}><Text style={styles.textPressable}>Ajouter au panier</Text></Pressable>
     </View>
   )
 }
@@ -28,4 +29,6 @@ const styles = StyleSheet.create({
   image: { width: 250, height: 250, marginBottom: 20 },
   titre: { fontSize: 24, fontWeight: 'bold' },
   prix: { fontSize: 20, color: 'green' },
+  pressableAjouter:{backgroundColor:'blue'},
+  textPressable:{color:'white'}
 })
