@@ -2,6 +2,7 @@ import {ImageBackground, StyleSheet, Text, View, TextInput, Pressable} from "rea
 import{Link, router } from 'expo-router'
 import React, { useState } from 'react';
 import { useSQLiteContext, SQLiteProvider } from 'expo-sqlite'
+import { useAuth } from '../context/AuthContext';
 const image = require('../images/background_pfi.jpg');
 async function initDB(db) {
   await db.execAsync(`
@@ -29,10 +30,14 @@ function Content(){
   const [nom, setNom] = useState('');
   const [mdp, setMdp] = useState('');
   const db = useSQLiteContext()
+  const { setUser } = useAuth();
   async function verifier(nom,mdp){
   const existeDansDb = await db.getFirstAsync('SELECT * FROM client WHERE nom = ? AND mdp = ?',[nom,mdp]);
-  if(existeDansDb != null)
+  if(existeDansDb != null){
     router.push('/(tabs)');
+    setUser(existeDansDb);
+  }
+    
   else
     return console.log('erreur');
 }

@@ -36,14 +36,6 @@ async function initDB (db) {
     INSERT INTO produit (titre, image, prix) VALUES ('Ballerina Cappuccina', 'ballerina',6.98);
     INSERT INTO produit (titre, image, prix) VALUES ('Chimpanzini Bananini', 'bananini',0.57);
     PRAGMA user_version = 2;
-    `,
-    `
-    DROP TABLE IF EXISTS client;
-    CREATE TABLE IF NOT EXISTS client (nom TEXT PRIMARY KEY,
-    mdp TEXT, admin INTEGER, adress TEXT, langue TEXT);
-    INSERT INTO client (nom, mdp, admin, adresse, langue) VALUES ('user', 'password', 0, '191 rue Lebleu, OrangeVille', 'Francais');
-    INSERT INTO client (nom, mdp, admin, adresse, langue) VALUES ('admin', 'password', 1, '192 rue Lebleu, OrangeVille', 'Anglais');
-    PRAGMA user_version = 2;
     `)
   }
 }
