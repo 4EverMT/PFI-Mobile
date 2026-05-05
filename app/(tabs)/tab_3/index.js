@@ -99,7 +99,6 @@ const Content = () => {
       />
 
       <Text style={styles.label}>Langue</Text>
-      {/* ✅ selected=langue et onSelect=setLangue — directement lié à la DB */}
       <RadioGroup options={options} selected={langue} onSelect={setLangue} />
 
       <Pressable style={styles.button} onPress={handleSave}>
