@@ -9,6 +9,7 @@ import {
   ScrollView
 } from 'react-native'
 import { useSQLiteContext, SQLiteProvider } from 'expo-sqlite'
+import { Link, router, useFocusEffect } from 'expo-router'
 import { useAuth } from '../../../context/AuthContext'
 
 const index = () => {
@@ -71,7 +72,6 @@ const Content = () => {
       console.error(e)
     }
   }
-
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Mon profil</Text>
@@ -103,6 +103,9 @@ const Content = () => {
 
       <Pressable style={styles.button} onPress={handleSave}>
         <Text style={styles.buttonText}>Enregistrer</Text>
+      </Pressable>
+      <Pressable style={styles.button} onPress={() => router.push('/entrepots')}>
+        <Text style={styles.buttonText}>Entrepôt</Text>
       </Pressable>
     </ScrollView>
   )

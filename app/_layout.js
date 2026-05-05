@@ -11,7 +11,7 @@ export default function RootLayout () {
           name='details/[id]'
           options={{ headerShown: true, title: 'Détails' }}
         />
-        <Stack.Screen name='entrepots' options={{ headerShown: true}}/>
+        <Stack.Screen name='entrepots' options={{ headerShown: true, title: 'Entrepôts'}}/>
       </Stack>
     </AuthProvider>
   )
