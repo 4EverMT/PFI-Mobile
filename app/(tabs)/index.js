@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { StyleSheet,
   Text,
   View,
@@ -7,8 +7,9 @@ import { StyleSheet,
   FlatList,
   TouchableOpacity,
   Pressable } from 'react-native'
-import { Link, router } from 'expo-router'
+import { Link, router, useFocusEffect } from 'expo-router'
 import { useSQLiteContext, SQLiteProvider } from 'expo-sqlite'
+import { useAuth } from '../../context/AuthContext';
 
 const IMAGES = {
   'tungtung':     require('../../images/tungtung.webp'),
@@ -43,7 +44,9 @@ async function initDB (db) {
 
 
 
-const Maison = ({ maison }) => {
+const Maison = ({ maison, onSupprimer }) => {
+  const { user } = useAuth();
+
   return (
     <View style={styles.maisonConteneur}>
       <Pressable
@@ -70,7 +73,7 @@ const AfficherFlatList = ({ produit }) => {
   return (
     <FlatList
       data={produit}
-      renderItem={({ item }) => <Maison maison={item} />}
+      renderItem={({ item }) => <Maison maison={item}/>}
       keyExtractor={item => item.num.toString()}
     />
   )
@@ -92,21 +95,28 @@ function Content() {
     chargerProduits();
   }, []);
 
+  useFocusEffect(
+      useCallback(() => {
+        chargerProduits();
+      }, [])
+    )
+
   async function chargerProduits() {
     const rows = await db.getAllAsync('SELECT * FROM produit');
     setProduits(rows);
   }
 
+  
+
   return (
     <View style={styles.container}>
-    <View style={styles.titreConteneur}>
-      <Text style={styles.titreTexte}>Produits</Text>
+      <View style={styles.titreConteneur}>
+        <Text style={styles.titreTexte}>Produits</Text>
+      </View>
+      <AfficherFlatList produit={produits}/>
     </View>
-    <AfficherFlatList produit={produits} />
-  </View>
   );
 }
-
 
 
 const styles = StyleSheet.create({
@@ -188,7 +198,19 @@ titreTexte: {
   pressableItem: {
   flexDirection: 'row',
   alignItems: 'center',
-  flex: 1
+  flex: 1,
+  supprimerBtn: {
+  backgroundColor: 'red',
+  paddingVertical: 6,
+  paddingHorizontal: 10,
+  marginHorizontal: 5,
+  borderRadius: 5,
+},
+supprimerTexte: {
+  color: 'white',
+  fontWeight: 'bold',
+  fontSize: 12,
+},
 }
 })
 
