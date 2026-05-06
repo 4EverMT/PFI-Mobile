@@ -32,7 +32,8 @@ const IMAGES = {
   vaca: require('../../images/vaca.png'),
   tralalero: require('../../images/Tralalero_Tralala.png'),
   ballerina: require('../../images/Ballerina.png'),
-  bananini: require('../../images/bananini.png')
+  bananini: require('../../images/bananini.png'),
+  Placeholder:   require('../../images/Placeholder.png')
 }
 
 export default function Details() {
