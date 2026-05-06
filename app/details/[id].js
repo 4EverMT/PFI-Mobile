@@ -5,14 +5,15 @@ import {
   StyleSheet,
   Pressable,
   Alert,
-  TextInput
+  TextInput,
+  ScrollView
 } from 'react-native'
 import { useLocalSearchParams, router } from 'expo-router'
 import { useSQLiteContext, SQLiteProvider } from 'expo-sqlite'
 import { useAuth } from '../../context/AuthContext'
 import { useState } from 'react'
 
-async function initDB(db) {
+async function initDB (db) {
   await db.execAsync(`
     CREATE TABLE IF NOT EXISTS panier (
       id       INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -33,10 +34,10 @@ const IMAGES = {
   tralalero: require('../../images/Tralalero_Tralala.png'),
   ballerina: require('../../images/Ballerina.png'),
   bananini: require('../../images/bananini.png'),
-  Placeholder:   require('../../images/Placeholder.png')
+  Placeholder: require('../../images/Placeholder.png')
 }
 
-export default function Details() {
+export default function Details () {
   return (
     <SQLiteProvider databaseName='produits.db' onInit={initDB}>
       <Content />
@@ -44,16 +45,18 @@ export default function Details() {
   )
 }
 
-function Content() {
-  const { id, titre, prix, image } = useLocalSearchParams()
+function Content () {
+  const { id, titre, prix, image, description } = useLocalSearchParams()
   const db = useSQLiteContext()
   const { user } = useAuth()
 
   const [nouveauTitre, setNouveauTitre] = useState(titre)
   const [nouveauPrix, setNouveauPrix] = useState(prix)
+  const [nouvelleDescription, setNouvelleDescription] = useState(
+    description || ''
+  )
 
-  //fonction bd
-  async function modifierProduit() {
+  async function modifierProduit () {
     const prixNumber = parseFloat(nouveauPrix)
     if (!nouveauTitre.trim()) {
       Alert.alert('Erreur', 'Le titre ne peut pas être vide.')
@@ -65,8 +68,13 @@ function Content() {
     }
     try {
       await db.runAsync(
-        'UPDATE produit SET titre = ?, prix = ? WHERE num = ?',
-        [nouveauTitre.trim(), prixNumber, Number(id)]
+        'UPDATE produit SET titre = ?, prix = ?, description = ? WHERE num = ?',
+        [
+          nouveauTitre.trim(),
+          prixNumber,
+          nouvelleDescription.trim(),
+          Number(id)
+        ]
       )
       Alert.alert('Succès', 'Produit modifié !', [
         { text: 'OK', onPress: () => router.back() }
@@ -77,11 +85,12 @@ function Content() {
     }
   }
 
-  async function supprimerProduit() {
+  async function supprimerProduit () {
     Alert.alert('Confirmer', 'Voulez-vous vraiment supprimer ce produit ?', [
       { text: 'Annuler', style: 'cancel' },
       {
-        text: 'Supprimer', style: 'destructive',
+        text: 'Supprimer',
+        style: 'destructive',
         onPress: async () => {
           await db.runAsync('DELETE FROM produit WHERE num = ?', [Number(id)])
           router.back()
@@ -90,7 +99,7 @@ function Content() {
     ])
   }
 
-  async function ajouterAuPanier() {
+  async function ajouterAuPanier () {
     try {
       const existe = await db.getFirstAsync(
         'SELECT * FROM panier WHERE client = ? AND produit = ?',
@@ -114,10 +123,10 @@ function Content() {
     }
   }
 
-  //admin
+  // admin
   if (user?.admin == 1) {
     return (
-      <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.container}>
         <Image source={IMAGES[image]} style={styles.image} />
 
         <Text style={styles.label}>Titre</Text>
@@ -137,40 +146,64 @@ function Content() {
           keyboardType='decimal-pad'
         />
 
+        <Text style={styles.label}>Description</Text>
+        <TextInput
+          style={[styles.input, styles.inputMultiline]}
+          value={nouvelleDescription}
+          onChangeText={setNouvelleDescription}
+          placeholder='Description du produit'
+          multiline
+          numberOfLines={4}
+        />
+
         <Pressable style={styles.pressableModifier} onPress={modifierProduit}>
-          <Text style={styles.textPressable}>Enregistrer les modifications</Text>
+          <Text style={styles.textPressable}>
+            Enregistrer les modifications
+          </Text>
         </Pressable>
 
         <Pressable style={styles.pressableSupprimer} onPress={supprimerProduit}>
           <Text style={styles.textPressable}>Supprimer le produit</Text>
         </Pressable>
 
-        <Pressable style={styles.pressableAnnuler} onPress={() => router.back()}>
+        <Pressable
+          style={styles.pressableAnnuler}
+          onPress={() => router.back()}
+        >
           <Text style={styles.textPressable}>Annuler</Text>
         </Pressable>
-      </View>
+      </ScrollView>
     )
   }
 
-  //pas admin
+  // user
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Image source={IMAGES[image]} style={styles.image} />
       <Text style={styles.titre}>{titre}</Text>
       <Text style={styles.prix}>{prix} $</Text>
+      {description ? (
+        <Text style={styles.description}>{description}</Text>
+      ) : null}
       <Pressable style={styles.pressableAjouter} onPress={ajouterAuPanier}>
         <Text style={styles.textPressable}>Ajouter au panier</Text>
       </Pressable>
-    </View>
+    </ScrollView>
   )
 }
 
-
 const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: 'center', padding: 20 },
+  container: { alignItems: 'center', padding: 20 },
   image: { width: 250, height: 250, marginBottom: 20 },
   titre: { fontSize: 24, fontWeight: 'bold' },
-  prix: { fontSize: 20, color: 'green' },
+  prix: { fontSize: 20, color: 'green', marginTop: 6 },
+  description: {
+    fontSize: 15,
+    color: '#555',
+    marginTop: 12,
+    textAlign: 'center',
+    lineHeight: 22
+  },
   label: {
     alignSelf: 'flex-start',
     fontSize: 16,
@@ -186,6 +219,7 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 16
   },
+  inputMultiline: { height: 100, textAlignVertical: 'top' },
   pressableAjouter: {
     backgroundColor: 'blue',
     padding: 12,
@@ -202,15 +236,6 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center'
   },
-  pressableAnnuler: {
-    backgroundColor: 'gray',
-    padding: 12,
-    borderRadius: 8,
-    marginTop: 10,
-    width: '100%',
-    alignItems: 'center'
-  },
-  textPressable: { color: 'white', fontSize: 16 },
   pressableSupprimer: {
     backgroundColor: 'red',
     padding: 12,
@@ -219,4 +244,13 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center'
   },
+  pressableAnnuler: {
+    backgroundColor: 'gray',
+    padding: 12,
+    borderRadius: 8,
+    marginTop: 10,
+    width: '100%',
+    alignItems: 'center'
+  },
+  textPressable: { color: 'white', fontSize: 16 }
 })

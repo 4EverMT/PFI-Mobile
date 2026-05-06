@@ -28,21 +28,20 @@ const IMAGES = {
 async function initDB (db) {
   const result = await db.getFirstAsync('PRAGMA user_version')
   const currentVersion = result?.user_version || 0
-  if (currentVersion < 2) {
+  
     await db.execAsync(`
-    DROP TABLE IF EXISTS produit;
-    CREATE TABLE IF NOT EXISTS produit (num INTEGER PRIMARY KEY AUTOINCREMENT,
-    titre TEXT, image TEXT, prix REAL);
-    INSERT INTO produit (titre, image, prix) VALUES ('Triple T', 'tungtung',333);
-    INSERT INTO produit (titre, image, prix) VALUES ('Bombardiro Crocodilo', 'bombardiro',8.47);
-    INSERT INTO produit (titre, image, prix) VALUES ('six-seven', 'six-seven',67.67);
-    INSERT INTO produit (titre, image, prix) VALUES ('Vacca Saturno Saturnita', 'vaca',17.38);
-    INSERT INTO produit (titre, image, prix) VALUES ('Tralalero Tralala', 'tralalero',1325.99);
-    INSERT INTO produit (titre, image, prix) VALUES ('Ballerina Cappuccina', 'ballerina',6.98);
-    INSERT INTO produit (titre, image, prix) VALUES ('Chimpanzini Bananini', 'bananini',0.57);
-    PRAGMA user_version = 2;
-    `)
-  }
+  DROP TABLE IF EXISTS produit;
+  CREATE TABLE IF NOT EXISTS produit (num INTEGER PRIMARY KEY AUTOINCREMENT,
+  titre TEXT, image TEXT, prix REAL, description TEXT);
+  INSERT INTO produit (titre, image, prix, description) VALUES ('Triple T', 'tungtung', 333, 'Le son du tambour qui résonne dans ta tête... tung tung tung.');
+  INSERT INTO produit (titre, image, prix, description) VALUES ('Bombardiro Crocodilo', 'bombardiro', 8.47, 'Mi-bombardier, mi-crocodile. 100% incompréhensible.');
+  INSERT INTO produit (titre, image, prix, description) VALUES ('six-seven', 'six-seven', 67.67, 'Six queues, sept têtes. Les maths ne fonctionnent pas ici.');
+  INSERT INTO produit (titre, image, prix, description) VALUES ('Vacca Saturno Saturnita', 'vaca', 17.38, 'Une vache orbitale venue des anneaux de Saturne.');
+  INSERT INTO produit (titre, image, prix, description) VALUES ('Tralalero Tralala', 'tralalero', 1325.99, 'Il chante, il danse, personne ne comprend pourquoi.');
+  INSERT INTO produit (titre, image, prix, description) VALUES ('Ballerina Cappuccina', 'ballerina', 6.98, 'Élégante le matin, caféinée en permanence.');
+  INSERT INTO produit (titre, image, prix, description) VALUES ('Chimpanzini Bananini', 'bananini', 0.57, 'Un singe, des bananes, et beaucoup trop d''énergie.');
+`)
+  
 }
 
 const Maison = ({ maison, onSupprimer }) => {
@@ -59,7 +58,8 @@ const Maison = ({ maison, onSupprimer }) => {
               id: maison.num,
               titre: maison.titre,
               prix: maison.prix,
-              image: maison.image
+              image: maison.image,
+              description: maison.description
             }
           })
         }
@@ -94,12 +94,13 @@ const HomePage = () => {
 const FormAjouter = ({ db, onAjouter }) => {
   const [nom, setNom] = useState('')
   const [prix, setPrix] = useState('')
+  const [description, setDescription] = useState('');
 
   async function ajouterArticle () {
     if (!nom.trim() || !prix) return
     await db.runAsync(
-      'INSERT INTO produit (titre, image, prix) VALUES (?, ?, ?)',
-      [nom.trim(), 'Placeholder', parseFloat(prix)] // image placeholder par défaut
+      'INSERT INTO produit (titre, image, prix, description) VALUES (?, ?, ?,?)',
+      [nom.trim(), 'Placeholder', parseFloat(prix), description.trim()] // image placeholder par défaut
     )
     setNom('')
     setPrix('')
@@ -127,6 +128,15 @@ const FormAjouter = ({ db, onAjouter }) => {
         placeholder='0.00'
         placeholderTextColor='#999'
         keyboardType='decimal-pad' //forcer des chiffres
+      />
+
+      <Text style={styles.formLabel}>Description</Text>
+      <TextInput
+        style={styles.formInput}
+        value={description}
+        onChangeText={setDescription}
+        placeholder='Description du produit'
+        placeholderTextColor='#999'
       />
 
       <Pressable
