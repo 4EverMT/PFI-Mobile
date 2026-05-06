@@ -99,6 +99,7 @@ function Content() {
                 placeholder="Entrez votre mot de passe"
                 placeholderTextColor="#999"
                 secureTextEntry
+                autoCapitalize="none"
               />
             </View>
 

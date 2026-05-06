@@ -15,6 +15,7 @@ const IMAGES = {
   tralalero:  require('../../../images/Tralalero_Tralala.png'),
   ballerina:  require('../../../images/Ballerina.png'),
   bananini:   require('../../../images/bananini.png'),
+  Placeholder:   require('../../../images/Placeholder.png'),
 }
 
 async function initDB(db) {
