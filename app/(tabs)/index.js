@@ -216,6 +216,3 @@ supprimerTexte: {
 
 
 export default HomePage
-
-
-

@@ -8,14 +8,6 @@ const TabsLayout = () => {
       <Tabs.Screen
         name='index'
         options={{
-          headerTitle: 'Accueil ',
-          title: 'Accueil',
-          tabBarIcon: ({color}) => <Ionicons name='home-outline' size={24} color={color}/>
-        }}
-      />
-      <Tabs.Screen
-        name='tab_1/index'
-        options={{
           headerTitle: 'Produits',
           title: 'Produits',
           tabBarIcon: ({color}) => <MaterialCommunityIcons name="reproduction" size={24} color={color} />
