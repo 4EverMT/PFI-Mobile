@@ -58,7 +58,12 @@ export default function App () {
   // https://docs.expo.dev/versions/latest/sdk/location/
   useEffect(() => {
     async function GetAdresse () {
-      const resultat = await Location.geocodeAsync(user.adresse) // Prend l'adresse et la converti en latitude et longitude. 
+      const { status } = await Location.requestForegroundPermissionsAsync()
+      if (status !== 'granted') {
+        console.log('Permission refusée')
+        return
+      }
+      const resultat = await Location.geocodeAsync(user.adresse) // Prend l'adresse et la converti en latitude et longitude.
       if (resultat.length > 0) {
         setMaison({
           latitude: resultat[0].latitude,
