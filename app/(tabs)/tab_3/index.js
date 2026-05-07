@@ -107,6 +107,10 @@ const Content = () => {
       <Pressable style={styles.button} onPress={() => router.push('/entrepots')}>
         <Text style={styles.buttonText}>Entrepôt</Text>
       </Pressable>
+      <Pressable style={styles.button} onPress={() =>{router.replace('/(tabs)/../')
+      }}>
+        <Text style={styles.buttonText}>Déconnexion</Text>
+      </Pressable>
     </ScrollView>
   )
 }

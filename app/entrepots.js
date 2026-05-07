@@ -54,9 +54,11 @@ export default function App () {
   const [maison, setMaison] = useState(null)
   const [selectionne, setSelectionne] = useState(null)
   // NOUVELLE CHOSE
+  // documentation de Expo
+  // https://docs.expo.dev/versions/latest/sdk/location/
   useEffect(() => {
-    async function geocoder () {
-      const resultat = await Location.geocodeAsync(user.adresse)
+    async function GetAdresse () {
+      const resultat = await Location.geocodeAsync(user.adresse) // Prend l'adresse et la converti en latitude et longitude. 
       if (resultat.length > 0) {
         setMaison({
           latitude: resultat[0].latitude,
@@ -64,7 +66,7 @@ export default function App () {
         })
       }
     }
-    geocoder()
+    GetAdresse()
   }, [])
   return (
     <View style={styles.container}>
@@ -115,7 +117,7 @@ export default function App () {
             center={{ latitude: e.latitude, longitude: e.longitude }}
             radius={5000}
             strokeColor='blue'
-            fillColor='rgba(0, 0, 255, 0.1)'
+            fillColor='rgba(0, 174, 255, 0.38)'
           />
         ))}
         <Polyline coordinates={coordonnees} strokeColor='red' strokeWidth={4} />
