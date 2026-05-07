@@ -12,9 +12,10 @@ import {
 import { Link, router, useFocusEffect } from 'expo-router'
 import { useSQLiteContext, SQLiteProvider } from 'expo-sqlite'
 import { useAuth } from '../context/AuthContext'
-import MapView, { Marker } from 'react-native-maps'
+import coordonnees from './coordonnees.json'
+import MapView, { Marker, Circle, Polyline } from 'react-native-maps'
 
-import * as Location from 'expo-location';
+import * as Location from 'expo-location'
 
 const entrepots = [
   {
@@ -51,7 +52,7 @@ const entrepots = [
 export default function App () {
   const { user } = useAuth()
   const [maison, setMaison] = useState(null)
-
+  const [selectionne, setSelectionne] = useState(null)
   // NOUVELLE CHOSE
   useEffect(() => {
     async function geocoder () {
@@ -67,6 +68,17 @@ export default function App () {
   }, [])
   return (
     <View style={styles.container}>
+      <View style={styles.liste}>
+        {entrepots.map(e => (
+          <Pressable
+            key={e.id}
+            style={selectionne === e.id ? styles.boutonActif : styles.bouton}
+            onPress={() => setSelectionne(e.id)}
+          >
+            <Text>{e.nom}</Text>
+          </Pressable>
+        ))}
+      </View>
       <MapView
         style={styles.map}
         initialRegion={{
@@ -89,7 +101,7 @@ export default function App () {
             key={e.id}
             coordinate={{ latitude: e.latitude, longitude: e.longitude }}
             title={e.nom}
-            
+            onPress={() => setSelectionne(e.id)}
           >
             <Image
               source={require('../images/entrepot.jpg')}
@@ -97,6 +109,16 @@ export default function App () {
             />
           </Marker>
         ))}
+        {entrepots.map(e => (
+          <Circle
+            key={e.id}
+            center={{ latitude: e.latitude, longitude: e.longitude }}
+            radius={5000}
+            strokeColor='blue'
+            fillColor='rgba(0, 0, 255, 0.1)'
+          />
+        ))}
+        <Polyline coordinates={coordonnees} strokeColor='red' strokeWidth={4} />
       </MapView>
     </View>
   )
@@ -105,8 +127,24 @@ const styles = StyleSheet.create({
   container: {
     flex: 1
   },
+  liste: {
+    flex: 25
+  },
   map: {
+    flex: 75,
     width: '100%',
     height: '100%'
+  },
+  bouton: {
+    padding: 6,
+    margin: 4,
+    backgroundColor: '#ddd',
+    borderRadius: 6
+  },
+  boutonActif: {
+    padding: 8,
+    margin: 4,
+    backgroundColor: '#2563eb',
+    borderRadius: 6
   }
 })
