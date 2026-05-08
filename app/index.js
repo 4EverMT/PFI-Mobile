@@ -11,9 +11,9 @@ import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { useSQLiteContext, SQLiteProvider } from 'expo-sqlite';
 import { useAuth } from '../context/AuthContext';
+import i18n from '../context/i18n';
 
 const image = require('../images/background_pfi.jpg');
-
 async function initDB(db) {
   await db.execAsync(`
     CREATE TABLE IF NOT EXISTS client (
@@ -63,12 +63,8 @@ function Content() {
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
       <ImageBackground source={image} resizeMode="cover" style={styles.bgImage}>
-
-       
         <View style={styles.overlay} />
-
         <View style={styles.content}>
-          
           <View style={styles.header}>
             <Text style={styles.title}>SHOP-A </Text>
             <Text style={styles.title}>BRAINROT</Text>
@@ -76,27 +72,27 @@ function Content() {
 
           
           <View style={styles.card}>
-            <Text style={styles.cardTitle}>Connexion</Text>
+            <Text style={styles.cardTitle}>{i18n.t('connexion')}</Text>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.inputLabel}>Nom d'utilisateur</Text>
+              <Text style={styles.inputLabel}>{i18n.t('nom')}</Text>
               <TextInput
                 style={styles.input}
                 value={nom}
                 onChangeText={(val) => setNom(val)}
-                placeholder="Entrez votre nom"
+                placeholder={i18n.t('nomPlaceholder')}
                 placeholderTextColor="#999"
                 autoCapitalize="none"
               />
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.inputLabel}>Mot de passe</Text>
+              <Text style={styles.inputLabel}>{i18n.t('mdp')}</Text>
               <TextInput
                 style={styles.input}
                 value={mdp}
                 onChangeText={(val) => setMdp(val)}
-                placeholder="Entrez votre mot de passe"
+                placeholder={i18n.t('mdpPlaceholder')}
                 placeholderTextColor="#999"
                 secureTextEntry
               />
@@ -104,7 +100,7 @@ function Content() {
 
             {erreur && (
               <Text style={styles.erreurTexte}>
-                 Nom ou mot de passe incorrect
+                {i18n.t('erreur')}
               </Text>
             )}
 
@@ -115,7 +111,7 @@ function Content() {
               ]}
               onPress={() => verifier(nom.toLocaleLowerCase(), mdp)}
             >
-              <Text style={styles.boutonTexte}>SE CONNECTER</Text>
+              <Text style={styles.boutonTexte}>{i18n.t('bouton')}</Text>
             </Pressable>
           </View>
 

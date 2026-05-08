@@ -11,6 +11,7 @@ import {
 import { useSQLiteContext, SQLiteProvider } from 'expo-sqlite'
 import { Link, router, useFocusEffect } from 'expo-router'
 import { useAuth } from '../../../context/AuthContext'
+import i18n from '../../../context/i18n'
 
 const index = () => {
   return (
@@ -43,16 +44,16 @@ const Content = () => {
 
   const [mdp, setMdp] = useState(user.mdp || '')
   const [adresse, setAdresse] = useState(user.adresse || '')
-  const [langue, setLangue] = useState(user.langue || 'fr') //langue du radio button
+  const [langue, setLangue] = useState(user.langue || 'fr')
 
   const options = [
     { id: 'fr', label: 'Français' },
-    { id: 'en', label: 'English' } //pour le radio button
+    { id: 'en', label: 'English' }
   ]
 
   const handleSave = async () => {
     if (!mdp.trim()) {
-      Alert.alert('Erreur', 'Le mot de passe ne peut pas être vide.')
+      Alert.alert(i18n.t('vraiErreur'), i18n.t('erreurMdp'))
       return
     }
 
@@ -66,50 +67,50 @@ const Content = () => {
         setUser({ ...user, mdp, adresse, langue })
       }
 
-      Alert.alert('Succès', 'Profil mis à jour.')
+      Alert.alert(i18n.t('succes'), i18n.t('succesProfil'))
     } catch (e) {
-      Alert.alert('Erreur', 'Impossible de mettre à jour le profil.')
+      Alert.alert(i18n.t('vraiErreur'), i18n.t('erreurProfil'))
       console.error(e)
     }
   }
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Mon profil</Text>
+      <Text style={styles.title}>{i18n.t('monProfil')}</Text>
 
-      <Text style={styles.label}>Nom</Text>
+      <Text style={styles.label}>{i18n.t('nomLabel')}</Text>
       <View style={styles.readOnly}>
         <Text style={styles.readOnlyText}>{user.nom}</Text>
       </View>
 
-      <Text style={styles.label}>Mot de passe</Text>
+      <Text style={styles.label}>{i18n.t('mdpLabel')}</Text>
       <TextInput
         style={styles.input}
         value={mdp}
         onChangeText={setMdp}
         secureTextEntry
-        placeholder='Mot de passe'
+        placeholder={i18n.t('mdpPlaceholder')}
       />
 
-      <Text style={styles.label}>Adresse</Text>
+      <Text style={styles.label}>{i18n.t('adresseLabel')}</Text>
       <TextInput
         style={styles.input}
         value={adresse}
         onChangeText={setAdresse}
-        placeholder='Adresse'
+        placeholder={i18n.t('adressePlaceholder')}
       />
 
-      <Text style={styles.label}>Langue</Text>
+      <Text style={styles.label}>{i18n.t('langueLabel')}</Text>
       <RadioGroup options={options} selected={langue} onSelect={setLangue} />
 
       <Pressable style={styles.button} onPress={handleSave}>
-        <Text style={styles.buttonText}>Enregistrer</Text>
+        <Text style={styles.buttonText}>{i18n.t('sauvegarder')}</Text>
       </Pressable>
       <Pressable style={styles.button} onPress={() => router.push('/entrepots')}>
-        <Text style={styles.buttonText}>Entrepôt</Text>
+        <Text style={styles.buttonText}>{i18n.t('entrepot')}</Text>
       </Pressable>
-      <Pressable style={styles.button} onPress={() =>{router.replace('/(tabs)/../')
-      }}>
-        <Text style={styles.buttonText}>Déconnexion</Text>
+      <Pressable style={styles.button} onPress={() => { router.replace('/(tabs)/../') }}>
+        <Text style={styles.buttonText}>{i18n.t('deconnexion')}</Text>
       </Pressable>
     </ScrollView>
   )
@@ -135,7 +136,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5'
   },
   readOnlyText: { fontSize: 16, color: '#888' },
-
   radioGroup: { flexDirection: 'row', gap: 20, marginTop: 8 },
   radioOption: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   circle: {

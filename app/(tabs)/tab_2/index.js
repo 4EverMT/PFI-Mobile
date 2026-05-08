@@ -6,6 +6,7 @@ import {
 import { useFocusEffect } from 'expo-router'
 import { useSQLiteContext, SQLiteProvider } from 'expo-sqlite'
 import { useAuth } from '../../../context/AuthContext'
+import i18n from '../../../context/i18n'
 
 const IMAGES = {
   tungtung:   require('../../../images/tungtung.webp'),
@@ -43,7 +44,6 @@ function Content() {
   const { user } = useAuth()
   const [articles, setArticles] = useState([])
 
-  // Recharge le panier quand on va sur la page (stack)
   useFocusEffect(
     useCallback(() => {
       chargerPanier()
@@ -65,7 +65,6 @@ function Content() {
     const nouvelleQuantite = article.quantite + delta
 
     if (nouvelleQuantite <= 0) {
-      // Supprime si 0
       await db.runAsync('DELETE FROM panier WHERE id = ?', [id])
     } else {
       await db.runAsync(
@@ -78,12 +77,12 @@ function Content() {
 
   async function supprimerArticle(id) {
     Alert.alert(
-      'Supprimer',
-      'Voulez-vous retirer cet article du panier ?',
+      i18n.t('supprimerArticle'),
+      i18n.t('supprimerMessage'),
       [
-        { text: 'Annuler', style: 'cancel' },
+        { text: i18n.t('annuler'), style: 'cancel' },
         {
-          text: 'Supprimer',
+          text: i18n.t('supprimerArticle'),
           style: 'destructive',
           onPress: async () => {
             await db.runAsync('DELETE FROM panier WHERE id = ?', [id])
@@ -136,15 +135,13 @@ function Content() {
 
   return (
     <View style={styles.container}>
-
-      
       <View style={styles.titreConteneur}>
-        <Text style={styles.titreTexte}>Mon Panier</Text>
+        <Text style={styles.titreTexte}>{i18n.t('monPanier')}</Text>
       </View>
 
       {articles.length === 0 ? (
         <View style={styles.vide}>
-          <Text style={styles.videTexte}>Votre panier est vide.</Text>
+          <Text style={styles.videTexte}>{i18n.t('panierVide')}</Text>
         </View>
       ) : (
         <>
@@ -154,14 +151,13 @@ function Content() {
             renderItem={({ item }) => <ArticlePanier article={item} />}
           />
 
-          
           <View style={styles.totalConteneur}>
-            <Text style={styles.totalTexte}>Total :</Text>
+            <Text style={styles.totalTexte}>{i18n.t('total')}</Text>
             <Text style={styles.totalMontant}>{total.toFixed(2)} $</Text>
           </View>
 
           <Pressable style={styles.btnCommander}>
-            <Text style={styles.btnCommanderTexte}>Commander</Text>
+            <Text style={styles.btnCommanderTexte}>{i18n.t('commander')}</Text>
           </Pressable>
         </>
       )}
@@ -188,8 +184,6 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     textTransform: 'uppercase'
   },
-
-  // Article
   articleConteneur: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -217,8 +211,6 @@ const styles = StyleSheet.create({
     color: 'green',
     marginBottom: 8,
   },
-
-  // Quantité
   quantiteConteneur: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -243,16 +235,12 @@ const styles = StyleSheet.create({
     minWidth: 20,
     textAlign: 'center',
   },
-
-  // Supprimer
   btnSupprimer: {
     padding: 8,
   },
   btnSupprimerTexte: {
     fontSize: 22,
   },
-
-  // Panier vide
   vide: {
     flex: 1,
     alignItems: 'center',
@@ -262,8 +250,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#999',
   },
-
-  // Total & Commander
   totalConteneur: {
     flexDirection: 'row',
     justifyContent: 'space-between',
