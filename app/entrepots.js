@@ -14,37 +14,37 @@ import { useSQLiteContext, SQLiteProvider } from 'expo-sqlite'
 import { useAuth } from '../context/AuthContext'
 import coordonnees from './coordonnees.json'
 import MapView, { Marker, Circle, Polyline } from 'react-native-maps'
-
+import i18n from '../context/i18n'
 import * as Location from 'expo-location'
 
 const entrepots = [
   {
     id: 1,
-    nom: 'Entrepôt A',
+    nom: `${i18n.t('entrepot')} A`,
     latitude: 45.7654316961701,
     longitude: -74.02165192959383
   },
   {
     id: 2,
-    nom: 'Entrepôt B',
+    nom: `${i18n.t('entrepot')} B`,
     latitude: 45.684974050158196,
     longitude: -73.92450686974308
   },
   {
     id: 3,
-    nom: 'Entrepôt C',
+    nom: `${i18n.t('entrepot')} C`,
     latitude: 45.673340295888416,
     longitude: -73.90098926368779
   },
   {
     id: 4,
-    nom: 'Entrepôt D',
+    nom: `${i18n.t('entrepot')} D`,
     latitude: 45.69468698136044,
     longitude: -73.9202153357914
   },
   {
     id: 5,
-    nom: 'Entrepôt E',
+    nom: `${i18n.t('entrepot')} E`,
     latitude: 45.678018075477574,
     longitude: -73.93446322851102
   }
@@ -96,7 +96,7 @@ export default function App () {
         }}
       >
         {maison && (
-          <Marker coordinate={maison} title='Ma maison'>
+          <Marker coordinate={maison} title={i18n.t('maison')}>
             <Image
               source={require('../images/maison.jpeg')}
               style={{ width: 40, height: 40 }}

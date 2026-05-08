@@ -12,6 +12,7 @@ import { useLocalSearchParams, router } from 'expo-router'
 import { useSQLiteContext, SQLiteProvider } from 'expo-sqlite'
 import { useAuth } from '../../context/AuthContext'
 import { useState } from 'react'
+import i18n from '../../context/i18n'
 
 async function initDB (db) {
   await db.execAsync(`
@@ -59,11 +60,11 @@ function Content () {
   async function modifierProduit () {
     const prixNumber = parseFloat(nouveauPrix)
     if (!nouveauTitre.trim()) {
-      Alert.alert('Erreur', 'Le titre ne peut pas être vide.')
+      Alert.alert(i18n.t('vraiErreur'), i18n.t('erreurTitre'))
       return
     }
     if (isNaN(prixNumber) || prixNumber < 0) {
-      Alert.alert('Erreur', 'Le prix doit être un nombre valide.')
+      Alert.alert(i18n.t('vraiErreur'), i18n.t('erreurPrix'))
       return
     }
     try {
@@ -76,27 +77,24 @@ function Content () {
           Number(id)
         ]
       )
-      Alert.alert('Succès', 'Produit modifié !', [
+      Alert.alert(i18n.t('succes'), i18n.t('succesModif'), [
         { text: 'OK', onPress: () => router.back() }
       ])
     } catch (e) {
-      Alert.alert('Erreur', 'Impossible de modifier le produit.')
+      Alert.alert(i18n.t('vraiErreur'), i18n.t('erreurModif'))
       console.error(e)
     }
   }
 
-  async function supprimerProduit () {
-    Alert.alert('Confirmer', 'Voulez-vous vraiment supprimer ce produit ?', [
-      { text: 'Annuler', style: 'cancel' },
-      {
-        text: 'Supprimer',
-        style: 'destructive',
-        onPress: async () => {
-          await db.runAsync('DELETE FROM produit WHERE num = ?', [Number(id)])
-          router.back()
-        }
-      }
-    ])
+
+  async function supprimerProduit() {
+Alert.alert(i18n.t('confirmer'), i18n.t('confirmSupprimer'), [
+  { text: i18n.t('annuler'), style: 'cancel' },
+  { text: i18n.t('supprimer'), style: 'destructive', onPress: async () => {
+    await db.runAsync('DELETE FROM produit WHERE num = ?', [Number(id)])
+    router.back()
+  }}
+])
   }
 
   async function ajouterAuPanier () {
@@ -116,9 +114,9 @@ function Content () {
           [user.nom, Number(id), 1]
         )
       }
-      Alert.alert('Succès', `"${titre}" a été ajouté au panier !`)
+      Alert.alert(i18n.t('succes'), `"${titre}" ${i18n.t('succesAjout')}`)
     } catch (e) {
-      Alert.alert('Erreur', "Impossible d'ajouter au panier.")
+      Alert.alert(i18n.t('vraiErreur'), i18n.t('erreurAjout'))
       console.error(e)
     }
   }
@@ -129,20 +127,20 @@ function Content () {
       <ScrollView contentContainerStyle={styles.container}>
         <Image source={IMAGES[image]} style={styles.image} />
 
-        <Text style={styles.label}>Titre</Text>
+        <Text style={styles.label}>{i18n.t('titre')}</Text>
         <TextInput
           style={styles.input}
           value={nouveauTitre}
           onChangeText={setNouveauTitre}
-          placeholder='Titre du produit'
+          placeholder= {i18n.t('titrePlaceholder')}
         />
 
-        <Text style={styles.label}>Prix ($)</Text>
+        <Text style={styles.label}>{i18n.t('prix')}</Text>
         <TextInput
           style={styles.input}
           value={String(nouveauPrix)}
           onChangeText={setNouveauPrix}
-          placeholder='Prix'
+          placeholder={i18n.t('prixPlaceholder')}
           keyboardType='decimal-pad'
         />
 
@@ -157,20 +155,17 @@ function Content () {
         />
 
         <Pressable style={styles.pressableModifier} onPress={modifierProduit}>
-          <Text style={styles.textPressable}>
-            Enregistrer les modifications
-          </Text>
+          <Text style={styles.textPressable}>{i18n.t('enregistrer')}</Text>
         </Pressable>
 
         <Pressable style={styles.pressableSupprimer} onPress={supprimerProduit}>
-          <Text style={styles.textPressable}>Supprimer le produit</Text>
+          <Text style={styles.textPressable}>{i18n.t('supprimer')}</Text>
         </Pressable>
 
-        <Pressable
-          style={styles.pressableAnnuler}
-          onPress={() => router.back()}
-        >
-          <Text style={styles.textPressable}>Annuler</Text>
+
+        <Pressable style={styles.pressableAnnuler} onPress={() => router.back()}>
+          <Text style={styles.textPressable}>{i18n.t('annuler')}</Text>
+
         </Pressable>
       </ScrollView>
     )
@@ -186,7 +181,7 @@ function Content () {
         <Text style={styles.description}>{description}</Text>
       ) : null}
       <Pressable style={styles.pressableAjouter} onPress={ajouterAuPanier}>
-        <Text style={styles.textPressable}>Ajouter au panier</Text>
+        <Text style={styles.textPressable}>{i18n.t('ajouterPanier')}</Text>
       </Pressable>
     </ScrollView>
   )

@@ -12,7 +12,8 @@ import {
 } from 'react-native'
 import { Link, router, useFocusEffect } from 'expo-router'
 import { useSQLiteContext, SQLiteProvider } from 'expo-sqlite'
-import { useAuth } from '../../context/AuthContext'
+import { useAuth } from '../../context/AuthContext';
+import i18n from '../../context/i18n'
 
 const IMAGES = {
   tungtung: require('../../images/tungtung.webp'),
@@ -175,7 +176,7 @@ function Content () {
   return (
     <View style={styles.container}>
       <View style={styles.titreConteneur}>
-        <Text style={styles.titreTexte}>Produits</Text>
+       <Text style={styles.titreTexte}>{i18n.t('produits')}</Text>
       </View>
        {/* Formulaire visible seulement pour l'admin */}
       {user?.admin == 1 && (
