@@ -2,9 +2,20 @@ import Ionicons from '@expo/vector-icons/Ionicons'
 import { Tabs } from 'expo-router'
 import Feather from '@expo/vector-icons/Feather';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { useAuth } from '../../context/AuthContext';
+import {View, Text} from 'react-native';
 const TabsLayout = () => {
+  const {user} = useAuth()
+  function header(){
   return (
-    <Tabs screenOptions={{ headerShown:false, tabBarActiveTintColor: "blue", tabBarInactiveTintColor: "lightblue"}}>
+    <View>
+      <Text>{user.nom}</Text>
+      <Text>{user.langue}</Text>
+    </View>
+  )
+}
+  return (
+    <Tabs screenOptions={{ headerShown:true,headerRight: header, tabBarActiveTintColor: "blue", tabBarInactiveTintColor: "lightblue"}}>
       <Tabs.Screen
         name='index'
         options={{
