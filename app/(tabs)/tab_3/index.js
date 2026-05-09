@@ -12,7 +12,7 @@ import { useSQLiteContext, SQLiteProvider } from 'expo-sqlite'
 import { Link, router, useFocusEffect } from 'expo-router'
 import { useAuth } from '../../../context/AuthContext'
 import i18n from '../../../context/i18n'
-
+import { getLocales } from 'expo-localization'
 const index = () => {
   return (
     <SQLiteProvider databaseName='produits.db'>
@@ -48,7 +48,8 @@ const Content = () => {
 
   const options = [
     { id: 'fr', label: 'Français' },
-    { id: 'en', label: 'English' }
+    { id: 'en', label: 'English' },
+    { id: 'auto', label: 'Auto' }
   ]
 
   const handleSave = async () => {
@@ -65,6 +66,13 @@ const Content = () => {
 
       if (setUser) {
         setUser({ ...user, mdp, adresse, langue })
+      }
+      if (langue === 'en') {
+        i18n.locale = 'en'
+      } else if (langue === 'fr') {
+        i18n.locale = 'fr'
+      } else {
+        i18n.locale = getLocales()[0].languageCode
       }
 
       Alert.alert(i18n.t('succes'), i18n.t('succesProfil'))
@@ -106,10 +114,18 @@ const Content = () => {
       <Pressable style={styles.button} onPress={handleSave}>
         <Text style={styles.buttonText}>{i18n.t('sauvegarder')}</Text>
       </Pressable>
-      <Pressable style={styles.button} onPress={() => router.push('/entrepots')}>
+      <Pressable
+        style={styles.button}
+        onPress={() => router.push('/entrepots')}
+      >
         <Text style={styles.buttonText}>{i18n.t('entrepot')}</Text>
       </Pressable>
-      <Pressable style={styles.button} onPress={() => { router.replace('/(tabs)/../') }}>
+      <Pressable
+        style={styles.button}
+        onPress={() => {
+          router.replace('/(tabs)/../')
+        }}
+      >
         <Text style={styles.buttonText}>{i18n.t('deconnexion')}</Text>
       </Pressable>
     </ScrollView>
