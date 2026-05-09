@@ -95,6 +95,7 @@ function Content() {
                 placeholder={i18n.t('mdpPlaceholder')}
                 placeholderTextColor="#999"
                 secureTextEntry
+                autoCapitalize="none"
               />
             </View>
 
