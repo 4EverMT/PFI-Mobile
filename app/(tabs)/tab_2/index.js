@@ -44,13 +44,19 @@ function Content() {
   const db = useSQLiteContext()
   const { user } = useAuth()
   const [articles, setArticles] = useState([])
-
+const formatterFR = new Intl.NumberFormat('fr-CA', { style: 'currency', currency: 'CAD' })
+const formatterEN = new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' })
   useFocusEffect(
     useCallback(() => {
       chargerPanier()
     }, [])
   )
-
+function formatPrix(montant) {
+  if (i18n.locale === 'en') {
+    return formatterEN.format(montant)
+  }
+  return formatterFR.format(montant)
+}
   async function chargerPanier() {
     const rows = await db.getAllAsync(`
       SELECT panier.id, panier.quantite, produit.num, produit.titre, produit.prix, produit.image
@@ -103,8 +109,8 @@ function Content() {
 
         <View style={styles.info}>
           <Text style={styles.titre}>{article.titre}</Text>
-          <Text style={styles.prix}>{(article.prix * article.quantite).toFixed(2)} $</Text>
-
+          {/* <Text style={styles.prix}>{(article.prix * article.quantite).toFixed(2)} $</Text> */}
+          <Text style={styles.prix}>{formatPrix(article.prix * article.quantite)}</Text>
           <View style={styles.quantiteConteneur}>
             <Pressable
               style={styles.btnQuantite}
@@ -154,7 +160,8 @@ function Content() {
 
           <View style={styles.totalConteneur}>
             <Text style={styles.totalTexte}>{i18n.t('total')}</Text>
-            <Text style={styles.totalMontant}>{total.toFixed(2)} $</Text>
+            {/* <Text style={styles.totalMontant}>{total.toFixed(2)} $</Text> */}
+            <Text style={styles.totalMontant}>{formatPrix(total)}</Text>
           </View>
 
           <Pressable style={styles.btnCommander}>
