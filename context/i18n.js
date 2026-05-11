@@ -97,7 +97,6 @@ const translations = {
     produits: 'Products',
   }
 }
-
 const i18n = new I18n(translations)
 i18n.enableFallback = true
 i18n.defaultLocale = 'fr'
