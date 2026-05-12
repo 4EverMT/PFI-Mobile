@@ -48,6 +48,9 @@ const translations = {
     supprimerArticle: 'Supprimer',
     supprimerMessage: 'Voulez-vous retirer cet article du panier ?',
     produits: 'Produits',
+    payerPanier: 'Panier acheté!',
+    compte: 'Compte',
+    panier: 'Panier',
   },
   en: {
     connexion: 'Login',
@@ -95,6 +98,9 @@ const translations = {
     supprimerArticle: 'Delete',
     supprimerMessage: 'Do you want to remove this item from the cart ?',
     produits: 'Products',
+    payerPanier: 'Shopping cart bought!',
+    compte: 'Account',
+    panier: 'Shopping Cart',
   }
 }
 const i18n = new I18n(translations)
