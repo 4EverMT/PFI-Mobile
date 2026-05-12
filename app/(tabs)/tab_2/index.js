@@ -102,6 +102,14 @@ function formatPrix(montant) {
 
   const total = articles.reduce((acc, a) => acc + a.prix * a.quantite, 0)
 
+  async function PayerPanier(){
+    await db.runAsync('DELETE FROM panier')
+    chargerPanier()
+    Alert.alert(i18n.t('payerPanier'))
+  }
+
+
+
   function ArticlePanier({ article }) {
     return (
       <View style={styles.articleConteneur}>
@@ -109,7 +117,6 @@ function formatPrix(montant) {
 
         <View style={styles.info}>
           <Text style={styles.titre}>{article.titre}</Text>
-          {/* <Text style={styles.prix}>{(article.prix * article.quantite).toFixed(2)} $</Text> */}
           <Text style={styles.prix}>{formatPrix(article.prix * article.quantite)}</Text>
           <View style={styles.quantiteConteneur}>
             <Pressable
@@ -151,7 +158,7 @@ function formatPrix(montant) {
           <Text style={styles.videTexte}>{i18n.t('panierVide')}</Text>
         </View>
       ) : (
-        <>
+        <> 
           <FlatList
             data={articles}
             keyExtractor={item => item.id.toString()}
@@ -160,11 +167,11 @@ function formatPrix(montant) {
 
           <View style={styles.totalConteneur}>
             <Text style={styles.totalTexte}>{i18n.t('total')}</Text>
-            {/* <Text style={styles.totalMontant}>{total.toFixed(2)} $</Text> */}
             <Text style={styles.totalMontant}>{formatPrix(total)}</Text>
           </View>
 
-          <Pressable style={styles.btnCommander}>
+          <Pressable style={styles.btnCommander}
+            onPress={() => PayerPanier()}>
             <Text style={styles.btnCommanderTexte}>{i18n.t('commander')}</Text>
           </Pressable>
         </>

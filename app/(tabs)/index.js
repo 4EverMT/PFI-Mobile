@@ -8,7 +8,8 @@ import {
   FlatList,
   TouchableOpacity,
   Pressable,
-  TextInput
+  TextInput,
+  KeyboardAvoidingView
 } from 'react-native'
 import { Link, router, useFocusEffect } from 'expo-router'
 import { useSQLiteContext, SQLiteProvider } from 'expo-sqlite'
@@ -109,7 +110,7 @@ const FormAjouter = ({ db, onAjouter }) => {
   }
 
   return (
-    <View style={styles.formConteneur}>
+    <KeyboardAvoidingView style={styles.formConteneur}>
       <Text style={styles.formTitre}>Ajouter un produit</Text>
 
       <Text style={styles.formLabel}>Titre</Text>
@@ -149,7 +150,7 @@ const FormAjouter = ({ db, onAjouter }) => {
       >
         <Text style={styles.formBoutonTexte}>+ Ajouter</Text>
       </Pressable>
-    </View>
+    </KeyboardAvoidingView>
   )
 }
 
