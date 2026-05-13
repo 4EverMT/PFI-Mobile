@@ -8,7 +8,9 @@ import { useSQLiteContext, SQLiteProvider } from 'expo-sqlite'
 import { useAuth } from '../../../context/AuthContext'
 import i18n from '../../../context/i18n'
 import { useAudioPlayer } from 'expo-audio';
-
+// NOUVELLE CHOSE 
+// https://docs.expo.dev/versions/latest/sdk/audio/
+// la documentation officiel d'Expo
 const audioSource = require('../../../assets/buying.mp3');
 
 const IMAGES = {
