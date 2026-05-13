@@ -7,6 +7,9 @@ import { useFocusEffect } from 'expo-router'
 import { useSQLiteContext, SQLiteProvider } from 'expo-sqlite'
 import { useAuth } from '../../../context/AuthContext'
 import i18n from '../../../context/i18n'
+import { useAudioPlayer } from 'expo-audio';
+
+const audioSource = require('../../../assets/buying.mp3');
 
 const IMAGES = {
   tungtung:   require('../../../images/tungtung.webp'),
@@ -46,6 +49,7 @@ function Content() {
   const [articles, setArticles] = useState([])
 const formatterFR = new Intl.NumberFormat('fr-CA', { style: 'currency', currency: 'CAD' })
 const formatterEN = new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' })
+const player = useAudioPlayer(audioSource)
   useFocusEffect(
     useCallback(() => {
       chargerPanier()
@@ -106,6 +110,7 @@ function formatPrix(montant) {
     await db.runAsync('DELETE FROM panier')
     chargerPanier()
     Alert.alert(i18n.t('payerPanier'))
+    player.play()
   }
 
 
