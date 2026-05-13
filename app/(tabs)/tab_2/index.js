@@ -112,6 +112,7 @@ function formatPrix(montant) {
     await db.runAsync('DELETE FROM panier')
     chargerPanier()
     Alert.alert(i18n.t('payerPanier'))
+    player.seekTo(0);
     player.play()
   }
 
