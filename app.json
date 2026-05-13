@@ -44,7 +44,15 @@
           }
         }
       ],
-      "expo-localization"
+      "expo-localization",
+      [
+    "expo-audio",
+    {
+      "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone.",
+      "enableBackgroundPlayback": true,
+      "enableBackgroundRecording": false
+    }
+  ]
     ]
   }
 }
