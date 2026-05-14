@@ -1,3 +1,5 @@
+// MATHIS TEIXEIRA && VINCENT LEVESQUE
+// PFI MOBILE
 import { I18n } from "i18n-js";
 import { getLocales } from "expo-localization";
 

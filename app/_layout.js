@@ -1,3 +1,5 @@
+// MATHIS TEIXEIRA && VINCENT LEVESQUE
+// PFI MOBILE
 import { Stack } from 'expo-router'
 import { AuthProvider } from '../context/AuthContext'
 

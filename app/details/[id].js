@@ -1,3 +1,5 @@
+// MATHIS TEIXEIRA && VINCENT LEVESQUE
+// PFI MOBILE
 import {
   View,
   Text,
