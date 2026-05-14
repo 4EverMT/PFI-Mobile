@@ -1,3 +1,5 @@
+// MATHIS TEIXEIRA && VINCENT LEVESQUE
+// PFI MOBILE
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { Tabs } from 'expo-router'
 import Feather from '@expo/vector-icons/Feather';

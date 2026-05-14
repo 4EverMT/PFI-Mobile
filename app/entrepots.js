@@ -1,3 +1,5 @@
+// MATHIS TEIXEIRA && VINCENT LEVESQUE
+// PFI MOBILE
 import React, { useState, useEffect, useCallback } from 'react'
 import {
   StyleSheet,

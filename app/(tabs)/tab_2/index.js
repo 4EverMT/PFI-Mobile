@@ -1,30 +1,37 @@
+// MATHIS TEIXEIRA && VINCENT LEVESQUE
+// PFI MOBILE
 import React, { useState, useCallback } from 'react'
 import {
-  View, Text, Image, StyleSheet,
-  FlatList, Pressable, Alert
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  FlatList,
+  Pressable,
+  Alert
 } from 'react-native'
 import { useFocusEffect } from 'expo-router'
 import { useSQLiteContext, SQLiteProvider } from 'expo-sqlite'
 import { useAuth } from '../../../context/AuthContext'
 import i18n from '../../../context/i18n'
-import { useAudioPlayer } from 'expo-audio';
-// NOUVELLE CHOSE 
+import { useAudioPlayer } from 'expo-audio'
+// NOUVELLE CHOSE
 // https://docs.expo.dev/versions/latest/sdk/audio/
 // la documentation officiel d'Expo
-const audioSource = require('../../../assets/buying.mp3');
+const audioSource = require('../../../assets/buying.mp3')
 
 const IMAGES = {
-  tungtung:   require('../../../images/tungtung.webp'),
+  tungtung: require('../../../images/tungtung.webp'),
   bombardiro: require('../../../images/bombardiro_crocodilo.png'),
-  'six-seven':require('../../../images/six-seven.png'),
-  vaca:       require('../../../images/vaca.png'),
-  tralalero:  require('../../../images/Tralalero_Tralala.png'),
-  ballerina:  require('../../../images/Ballerina.png'),
-  bananini:   require('../../../images/bananini.png'),
-  Placeholder:   require('../../../images/Placeholder.png'),
+  'six-seven': require('../../../images/six-seven.png'),
+  vaca: require('../../../images/vaca.png'),
+  tralalero: require('../../../images/Tralalero_Tralala.png'),
+  ballerina: require('../../../images/Ballerina.png'),
+  bananini: require('../../../images/bananini.png'),
+  Placeholder: require('../../../images/Placeholder.png')
 }
 
-async function initDB(db) {
+async function initDB (db) {
   await db.execAsync(`
     CREATE TABLE IF NOT EXISTS panier (
       id       INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -37,7 +44,7 @@ async function initDB(db) {
   `)
 }
 
-export default function Panier() {
+export default function Panier () {
   return (
     <SQLiteProvider databaseName='produits.db' onInit={initDB}>
       <Content />
@@ -45,87 +52,93 @@ export default function Panier() {
   )
 }
 
-function Content() {
+function Content () {
   const db = useSQLiteContext()
   const { user } = useAuth()
   const [articles, setArticles] = useState([])
-const formatterFR = new Intl.NumberFormat('fr-CA', { style: 'currency', currency: 'CAD' })
-const formatterEN = new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' })
-const player = useAudioPlayer(audioSource)
+  const formatterFR = new Intl.NumberFormat('fr-CA', {
+    style: 'currency',
+    currency: 'CAD'
+  })
+  const formatterEN = new Intl.NumberFormat('en-CA', {
+    style: 'currency',
+    currency: 'CAD'
+  })
+  const player = useAudioPlayer(audioSource)
   useFocusEffect(
     useCallback(() => {
       chargerPanier()
     }, [])
   )
-function formatPrix(montant) {
-  if (i18n.locale === 'en') {
-    return formatterEN.format(montant)
+  function formatPrix (montant) {
+    if (i18n.locale === 'en') {
+      return formatterEN.format(montant)
+    }
+    return formatterFR.format(montant)
   }
-  return formatterFR.format(montant)
-}
-  async function chargerPanier() {
-    const rows = await db.getAllAsync(`
+  async function chargerPanier () {
+    const rows = await db.getAllAsync(
+      `
       SELECT panier.id, panier.quantite, produit.num, produit.titre, produit.prix, produit.image
       FROM panier
       JOIN produit ON panier.produit = produit.num
       WHERE panier.client = ?
-    `, [user.nom])
+    `,
+      [user.nom]
+    )
     setArticles(rows)
   }
 
-  async function changerQuantite(id, delta) {
+  async function changerQuantite (id, delta) {
+    // find cherche et retourne le premier qui repond a la condition
     const article = articles.find(a => a.id === id)
     const nouvelleQuantite = article.quantite + delta
 
     if (nouvelleQuantite <= 0) {
       await db.runAsync('DELETE FROM panier WHERE id = ?', [id])
     } else {
-      await db.runAsync(
-        'UPDATE panier SET quantite = ? WHERE id = ?',
-        [nouvelleQuantite, id]
-      )
+      await db.runAsync('UPDATE panier SET quantite = ? WHERE id = ?', [
+        nouvelleQuantite,
+        id
+      ])
     }
     chargerPanier()
   }
 
-  async function supprimerArticle(id) {
-    Alert.alert(
-      i18n.t('supprimerArticle'),
-      i18n.t('supprimerMessage'),
-      [
-        { text: i18n.t('annuler'), style: 'cancel' },
-        {
-          text: i18n.t('supprimerArticle'),
-          style: 'destructive',
-          onPress: async () => {
-            await db.runAsync('DELETE FROM panier WHERE id = ?', [id])
-            chargerPanier()
-          }
+  async function supprimerArticle (id) {
+    Alert.alert(i18n.t('supprimerArticle'), i18n.t('supprimerMessage'), [
+      { text: i18n.t('annuler'), style: 'cancel' },
+      {
+        text: i18n.t('supprimerArticle'),
+        style: 'destructive',
+        onPress: async () => {
+          await db.runAsync('DELETE FROM panier WHERE id = ?', [id])
+          chargerPanier()
         }
-      ]
-    )
+      }
+    ])
   }
-
+  // reduce acummule le tout
   const total = articles.reduce((acc, a) => acc + a.prix * a.quantite, 0)
 
-  async function PayerPanier(){
+  async function PayerPanier () {
     await db.runAsync('DELETE FROM panier')
     chargerPanier()
     Alert.alert(i18n.t('payerPanier'))
-    player.seekTo(0);
+    player.seekTo(0)
     player.play()
   }
 
-
-
-  function ArticlePanier({ article }) {
+  function ArticlePanier ({ article }) {
     return (
       <View style={styles.articleConteneur}>
         <Image source={IMAGES[article.image]} style={styles.image} />
 
         <View style={styles.info}>
           <Text style={styles.titre}>{article.titre}</Text>
-          <Text style={styles.prix}>{formatPrix(article.prix * article.quantite)}</Text>
+          <Text style={styles.prix}>
+            {formatPrix(article.prix * article.quantite)}
+          </Text>
           <View style={styles.quantiteConteneur}>
             <Pressable
               style={styles.btnQuantite}
@@ -166,7 +179,7 @@ function formatPrix(montant) {
           <Text style={styles.videTexte}>{i18n.t('panierVide')}</Text>
         </View>
       ) : (
-        <> 
+        <View>
           <FlatList
             data={articles}
             keyExtractor={item => item.id.toString()}
@@ -178,11 +191,10 @@ function formatPrix(montant) {
             <Text style={styles.totalMontant}>{formatPrix(total)}</Text>
           </View>
 
-          <Pressable style={styles.btnCommander}
-            onPress={() => PayerPanier()}>
+          <Pressable style={styles.btnCommander} onPress={() => PayerPanier()}>
             <Text style={styles.btnCommanderTexte}>{i18n.t('commander')}</Text>
           </Pressable>
-        </>
+        </View>
       )}
     </View>
   )
@@ -199,7 +211,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     height: 50,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   titreTexte: {
     color: '#F3F3F3',
@@ -213,31 +225,31 @@ const styles = StyleSheet.create({
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#DDD',
-    height: 120,
+    height: 120
   },
   image: {
     width: 90,
     height: 90,
-    borderRadius: 8,
+    borderRadius: 8
   },
   info: {
     flex: 1,
-    marginLeft: 12,
+    marginLeft: 12
   },
   titre: {
     fontSize: 15,
     fontWeight: 'bold',
-    marginBottom: 4,
+    marginBottom: 4
   },
   prix: {
     fontSize: 14,
     color: 'green',
-    marginBottom: 8,
+    marginBottom: 8
   },
   quantiteConteneur: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    gap: 10
   },
   btnQuantite: {
     backgroundColor: '#00008b',
@@ -245,33 +257,33 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   btnQuantiteTexte: {
     color: 'white',
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: 'bold'
   },
   quantite: {
     fontSize: 16,
     fontWeight: 'bold',
     minWidth: 20,
-    textAlign: 'center',
+    textAlign: 'center'
   },
   btnSupprimer: {
-    padding: 8,
+    padding: 8
   },
   btnSupprimerTexte: {
-    fontSize: 22,
+    fontSize: 22
   },
   vide: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   videTexte: {
     fontSize: 18,
-    color: '#999',
+    color: '#999'
   },
   totalConteneur: {
     flexDirection: 'row',
@@ -279,27 +291,27 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 14,
     borderTopWidth: 1,
-    borderTopColor: '#DDD',
+    borderTopColor: '#DDD'
   },
   totalTexte: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: 'bold'
   },
   totalMontant: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: 'green',
+    color: 'green'
   },
   btnCommander: {
     backgroundColor: '#00008b',
     margin: 16,
     padding: 14,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: 'center'
   },
   btnCommanderTexte: {
     color: 'white',
     fontSize: 16,
-    fontWeight: 'bold',
-  },
+    fontWeight: 'bold'
+  }
 })
