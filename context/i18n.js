@@ -53,6 +53,7 @@ const translations = {
     payerPanier: 'Panier acheté!',
     compte: 'Compte',
     panier: 'Panier',
+    description: 'Description',
   },
   en: {
     connexion: 'Login',
@@ -103,6 +104,7 @@ const translations = {
     payerPanier: 'Shopping cart bought!',
     compte: 'Account',
     panier: 'Shopping Cart',
+    description: 'Description',
   }
 }
 const i18n = new I18n(translations)

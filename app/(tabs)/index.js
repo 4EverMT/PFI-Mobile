@@ -115,7 +115,7 @@ const FormAjouter = ({ db, onAjouter }) => {
     <KeyboardAvoidingView style={styles.formConteneur}>
       <Text style={styles.formTitre}>Ajouter un produit</Text>
 
-      <Text style={styles.formLabel}>Titre</Text>
+      <Text style={styles.formLabel}>{i18n.t('titre')}</Text>
       <TextInput
         style={styles.formInput}
         value={nom}
@@ -124,7 +124,7 @@ const FormAjouter = ({ db, onAjouter }) => {
         placeholderTextColor='#999'
       />
 
-      <Text style={styles.formLabel}>Prix ($)</Text>
+      <Text style={styles.formLabel}>{i18n.t('prix')}</Text>
       <TextInput
         style={styles.formInput}
         value={prix}
@@ -134,7 +134,7 @@ const FormAjouter = ({ db, onAjouter }) => {
         keyboardType='decimal-pad' //forcer des chiffres
       />
 
-      <Text style={styles.formLabel}>Description</Text>
+      <Text style={styles.formLabel}>{i18n.t('description')}</Text>
       <TextInput
         style={styles.formInput}
         value={description}
