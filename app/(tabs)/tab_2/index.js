@@ -65,7 +65,9 @@ function Content () {
     currency: 'CAD'
   })
   const player = useAudioPlayer(audioSource)
+  // Lorsque l'écran devient actif
   useFocusEffect(
+    // React hook pour mettre une fonction en cache
     useCallback(() => {
       chargerPanier()
     }, [])

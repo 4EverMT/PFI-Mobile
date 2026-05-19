@@ -120,7 +120,7 @@ const FormAjouter = ({ db, onAjouter }) => {
         style={styles.formInput}
         value={nom}
         onChangeText={setNom}
-        placeholder='Nom du produit'
+        placeholder={i18n.t('nomProduit')}
         placeholderTextColor='#999'
       />
 
@@ -139,7 +139,7 @@ const FormAjouter = ({ db, onAjouter }) => {
         style={styles.formInput}
         value={description}
         onChangeText={setDescription}
-        placeholder='Description du produit'
+        placeholder={i18n.t('descriptionProduit')}
         placeholderTextColor='#999'
       />
 
